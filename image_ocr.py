@@ -39,7 +39,8 @@ class ImageReader:
 
     def pdf_image_conversion(self, pdf_path):
         pdf_name = re.findall(r'([^/]*/)*([^.]*)\.pdf', pdf_path)[-1][-1]
-        os.mkdir(pdf_name)
+        if not os.path.isdir(pdf_name):
+            os.mkdir(pdf_name)
         images = convert_from_path(pdf_path, 300)
         for i, image in enumerate(images):
             image.save(f'{pdf_name}/page_{i + 1}.jpg', 'JPEG')
