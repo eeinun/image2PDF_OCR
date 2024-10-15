@@ -156,7 +156,7 @@ class ImageReader:
         self.canv.save()
 
 
-r = ImageReader(["ko"])
+r = ImageReader([x for x in input("인식언어 (공백으로 분리): ").split()])
 
 r.work_image_sequence(
     r.pdf_image_conversion(input("PDF 파일 경로: ")),
