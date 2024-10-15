@@ -159,10 +159,18 @@ class ImageReader:
         print(f"Task finished. Output path: {input_dir}/{output_file_name}")
 
 
+# pdf -> img -> ocr_pdf
 r = ImageReader([x for x in input("인식언어 (공백으로 분리): ").split()])
-
 r.work_image_sequence(
     r.pdf_image_conversion(input("PDF 파일 경로: ")),
     input("출력 파일 이름: "),
     None
 )
+
+# image_set (directory) -> ocr_pdf (combined)
+# r = ImageReader([x for x in input("인식언어 (공백으로 분리): ").split()])
+# r.work_image_sequence(
+#     input("이미지 폴더 경로: "),
+#     input("출력 파일 이름: "),
+#     None
+# )
