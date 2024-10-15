@@ -154,6 +154,7 @@ class ImageReader:
                 target_size=target_size
             )
         self.canv.save()
+        print(f"Task finished. Output path: {input_dir}/{output_file_name}")
 
 
 r = ImageReader([x for x in input("인식언어 (공백으로 분리): ").split()])
