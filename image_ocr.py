@@ -38,13 +38,15 @@ class ImageReader:
         self.is_first = True
 
     def pdf_image_conversion(self, pdf_path):
-        pdf_name = re.findall(r'([^.]*\.pdf)', pdf_path)
+        pdf_name = re.findall(r'([^/]*/)*([^.]*)\.pdf', pdf_path)[-1][-1]
+        if not os.path.isdir(pdf_name):
+            os.mkdir(pdf_name)
         images = convert_from_path(pdf_path, 300)
         for i, image in enumerate(images):
             image.save(f'{pdf_name}/page_{i + 1}.jpg', 'JPEG')
         return pdf_name
 
-    def read_image(self, path, lattice_fit: int = 1, target_size=A4):
+    def read_image(self, path, lattice_fit: int = 1, target_size=None):
         self.image_path = path
         with open(path, "rb") as f:
             m = magic.from_buffer(f.read(2048))
@@ -77,7 +79,7 @@ class ImageReader:
             ))
         return postprocessed
 
-    def write_pdf(self, segments, target_size=A4):
+    def write_pdf(self, segments, target_size=None, stroke=1):
         image_mode = target_size is None
         if target_size is None:
             target_size = (self.image_w, self.image_h)
@@ -134,7 +136,8 @@ class ImageReader:
             self,
             input_dir,
             output_file_name,
-            target_size=A4
+            target_size=None,
+            bounding_box=1
     ):
         output_file_name = re.sub(r'[$/:\\?"><|]', '', output_file_name)
         if not output_file_name.endswith(".pdf"):
@@ -150,15 +153,26 @@ class ImageReader:
                 continue
             self.write_pdf(
                 self.read_image(f"{input_dir}/{file_list[i]}", lattice_fit=5, target_size=target_size),
-                target_size=target_size
+                target_size=target_size,
+                stroke=bounding_box
             )
+            os.remove(f"{input_dir}/{file_list[i]}")
         self.canv.save()
+        print(f"Task finished. Output path: {input_dir}/{output_file_name}")
 
 
-r = ImageReader(["ko"])
-
+# pdf -> img -> ocr_pdf
+r = ImageReader([x for x in input("인식언어 (공백으로 분리): ").split()])
 r.work_image_sequence(
     r.pdf_image_conversion(input("PDF 파일 경로: ")),
     input("출력 파일 이름: "),
-    None
+    bounding_box=1
 )
+
+# image_set (directory) -> ocr_pdf (combined)
+# r = ImageReader([x for x in input("인식언어 (공백으로 분리): ").split()])
+# r.work_image_sequence(
+#     input("이미지 폴더 경로: "),
+#     input("출력 파일 이름: "),
+#     None
+# )
