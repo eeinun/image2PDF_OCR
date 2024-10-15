@@ -154,7 +154,7 @@ class ImageReader:
                 self.read_image(f"{input_dir}/{file_list[i]}", lattice_fit=5, target_size=target_size),
                 target_size=target_size
             )
-            os.rmdir(f"{input_dir}/{file_list[i]}")
+            os.remove(f"{input_dir}/{file_list[i]}")
         self.canv.save()
         print(f"Task finished. Output path: {input_dir}/{output_file_name}")
 
