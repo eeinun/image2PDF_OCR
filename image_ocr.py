@@ -145,6 +145,8 @@ class ImageReader:
         pdfmetrics.registerFont(TTFont("Pretendard", "Pretendard-Regular.ttf"))
         self.canv = canvas.Canvas(f"{input_dir}/{output_file_name}", pagesize=target_size)
         file_list = os.listdir(input_dir)
+        num_postfix = lambda x: ([x] + [int(z) for z in re.findall(r'[^0-9]*(\d+)\..*', x)])[-1]
+        file_list.sort(key=num_postfix)  # quasi-natsort
         ww = len(str(len(file_list)))
         for i in range(len(file_list)):
             print(f"\r[{i + 1:{ww}}/{len(file_list)}] '{file_list[i]}'", end=" ")
