@@ -96,6 +96,8 @@ class ImageReader:
             self.canv.setFillColorRGB(0, 0, 0, alpha=0)
             self.canv.saveState()
             (x, y, w, h), text = seg
+            if len(text) == 0:
+                continue
             self.canv.setFont("Pretendard", int(h * 3 / 4))
             self.canv.rect(*seg[0], stroke=1)
             self.canv.setFillColorRGB(0, 0, 0, alpha=0)
